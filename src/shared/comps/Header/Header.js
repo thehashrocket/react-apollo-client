@@ -1,58 +1,53 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { withRouter } from 'react-router'
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useLocation,
+  useParams
+} from "react-router-dom";
+import HeaderStyles from './HeaderStyles'
 import { userIsLoggedIn, signOut } from '../../../utils/userUtils'
 
-class Header extends Component {
-  render() {
-    return (
-      <div className="flex pa1 justify-between nowrap orange">
-        <div className="flex flex-fixed black">
-          <div className="fw7 mr1">
-          <Link to="/" className="ml1 no-underline black">
-            Home
-          </Link>
-          </div>
-          <Link to="/new" className="ml1 no-underline black">
-            new
-          </Link>
-          <div className="ml1">|</div>
-          <Link to="/top" className="ml1 no-underline black">
-            top
-          </Link>
-          <div className="ml1">|</div>
-          <Link to="/search" className="ml1 no-underline black">
-            search
-          </Link>
-          {userIsLoggedIn() && (
-            <div className="flex">
-              <div className="ml1">|</div>
-              <Link to="/create" className="ml1 no-underline black">
-                submit
-              </Link>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-fixed">
-          {userIsLoggedIn() ? (
-            <div
-              className="ml1 pointer black"
-              onClick={() => {
-                signOut();
-                this.props.history.push(`/`)
-              }}
-            >
-              logout
-            </div>
-          ) : (
-              <Link to="/login" className="ml1 no-underline black">
-                login
-            </Link>
-            )}
-        </div>
-      </div>
-    )
-  }
+function NavLink(props) {
+  return (
+      <li>
+        <Link {...props} style={{ color: "inherit" }} />
+      </li>
+  );
 }
 
-export default withRouter(Header)
+const Header = props => {
+    return (
+        <HeaderStyles data-testid={`nav`}>
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/new">New</NavLink>
+          <NavLink to="/top">Top</NavLink>
+          <NavLink to="/search">Search</NavLink>
+          {userIsLoggedIn() && (
+              <NavLink to="/create">
+                submit
+              </NavLink>
+          )}
+          {userIsLoggedIn() ? (
+              <div
+                  className="ml1 pointer black"
+                  onClick={() => {
+                    signOut();
+                    this.props.history.push(`/`)
+                  }}
+              >
+                Logout
+              </div>
+          ) : (
+              <NavLink to="/login" className="ml1 no-underline black">
+                Login
+              </NavLink>
+          )}
+        </HeaderStyles>
+    )
+}
+
+export default Header
